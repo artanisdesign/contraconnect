@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": ["es2015", "dom", "esnext"],
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "esModuleInterop": true,
+    "baseUrl": "./src"
+  },
+  "compileOnSave": true,
+  "include": ["./src/**/*.ts", ".eslintrc.js"]
+}

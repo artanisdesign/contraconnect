@@ -1,0 +1,13 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.ReflectionUtil (file:/Users/artanis/.cache/firebase/emulators/firebase-database-emulator-v4.11.0.jar) to field sun.nio.ch.SelectorImpl.selectedKeys
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.ReflectionUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+13:36:47.915 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+13:36:48.113 [main] INFO com.firebase.server.forge.App$ - Listening at 127.0.0.1:9000
+13:36:57.462 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.NamespaceActor - doc-generator-dev-default-rtdb successfully activated FBKV (SurveyIdle(0)) wait: 125ms, init: 0ms
+13:36:57.536 [NamespaceSystem-blocking-namespace-operation-dispatcher-8] INFO com.firebase.core.namespace.StateManager - Namespace doc-generator-dev-default-rtdb status Active to Active
+14:02:37.026 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+14:02:37.062 [NamespaceSystem-akka.actor.default-dispatcher-7] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: doc-generator-dev-default-rtdb
+14:02:37.073 [NamespaceSystem-akka.actor.default-dispatcher-7] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for doc-generator-dev-default-rtdb
+14:02:37.084 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.

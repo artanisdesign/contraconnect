@@ -1,0 +1,63 @@
+{
+  "name": "contraconnect",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@fontsource/open-sans": "^4.5.14",
+    "@fontsource/public-sans": "^4.5.12",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/joy": "^5.0.0-alpha.76",
+    "@mui/material": "^5.12.1",
+    "@mui/utils": "^5.12.0",
+    "@tanstack/react-query": "^4.29.3",
+    "@tanstack/react-query-devtools": "^4.29.3",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@toast-ui/react-calendar": "^2.1.3",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^18.16.0",
+    "@types/react": "^18.0.38",
+    "@types/react-dom": "^18.0.11",
+    "axios": "^1.3.6",
+    "firebase": "^9.20.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-feather": "^2.0.10",
+    "react-router-dom": "^6.10.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.4.2",
+    "web-vitals": "^3.3.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "deploy": "yarn build && firebase deploy",
+    "eject": "react-scripts eject",
+    "emulator": "firebase emulators:start --import=./seed --export-on-exit"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.1"
+  }
+}

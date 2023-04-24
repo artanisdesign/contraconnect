@@ -1,0 +1,11 @@
+{
+  "projects": {
+    "default": "contraconnect-dev"
+  },
+  "targets": {},
+  "etags": {
+    "contraconnect-dev": {
+      "extensionInstances": {}
+    }
+  }
+}

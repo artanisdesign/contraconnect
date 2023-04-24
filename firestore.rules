@@ -1,0 +1,12 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+    	return request.auth.uid != null;
+    }
+
+       match /attempts/{id} {
+      	allow read: if signedIn();
+        allow create: if signedIn();
+    }
+  }
+}
