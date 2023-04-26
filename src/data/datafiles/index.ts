@@ -1,4 +1,4 @@
-import { document as leaseDocument } from "./lease";
-import { document as clientIdDoc } from "./client-identification";
+import { document as bid } from "./bid";
+//import { document as spa } from "./spa";
 
-export const documents = [leaseDocument, clientIdDoc];
+export const documents = [bid];

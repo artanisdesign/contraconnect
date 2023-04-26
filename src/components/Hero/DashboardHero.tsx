@@ -68,6 +68,8 @@ export default function DashboardHero() {
           <Button
             variant="outlined"
             //color="neutral"
+            component={RouterLink}
+            to={ROUTES.CASES_BID}
             endDecorator={<ArrowRightCircle size={20} />}
             sx={{
               "&:hover": { "--Button-gap": "0.8rem" },
@@ -84,7 +86,7 @@ export default function DashboardHero() {
               borderRadius: "xl",
             }}
             component={RouterLink}
-            to={ROUTES.DASHBOARD_CASES}
+            to={ROUTES.CASES_SPA}
             endDecorator={<ArrowRightCircle size={20} />}
           >
             Új adásvétel

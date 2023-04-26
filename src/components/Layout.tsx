@@ -102,7 +102,7 @@ function Main(props: BoxProps) {
       component="main"
       className="Main"
       {...props}
-      sx={[{ p: 3 }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
+      sx={[{ p: 2 }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
     />
   );
 }
@@ -125,6 +125,8 @@ function SideDrawer({
         sx={{
           position: "absolute",
           inset: 0,
+          opacity: "0.8",
+          transition: "opacity 0.4s",
           bgcolor: (theme) =>
             `rgba(${theme.vars.palette.neutral.darkChannel} / 0.8)`,
         }}
@@ -135,6 +137,7 @@ function SideDrawer({
           width: "max-content",
           height: "100%",
           p: 2,
+         
           boxShadow: "lg",
           bgcolor: "background.surface",
         }}

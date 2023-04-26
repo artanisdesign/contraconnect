@@ -7,8 +7,6 @@ import {
   FormLabel,
   Grid,
   Input,
-  List,
-  ListSubheader,
   Radio,
   RadioGroup,
   Select,
@@ -19,6 +17,7 @@ import {
   CircularProgress,
   AutocompleteOption,
   ListItemContent,
+  Typography,
 } from "@mui/joy";
 
 import { getData } from "data";
@@ -118,7 +117,7 @@ export default function DraftPage() {
     }
   }, [docId]);
 
-  if (!document) return null;
+  if (!document) return <>Hamarosan...</>;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -182,6 +181,18 @@ export default function DraftPage() {
           }
         }}
       >
+        <Typography
+          sx={{
+            //fontWeight: 600,
+            mb: 2,
+            mx: 1,
+          }}
+          level="h2"
+          variant="plain"
+          color="warning"
+        >
+          {document.title}
+        </Typography>
         <Grid
           container
           spacing={2}
@@ -216,9 +227,19 @@ export default function DraftPage() {
                   }}
                   variant="outlined"
                 >
-                  <List size="md" sx={{ m: 0 }}>
-                    <ListSubheader>{section.title}</ListSubheader>
-                  </List>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      p: 1,
+                      mb: 1,
+                    }}
+                    level="h6"
+                    color="neutral"
+                    variant="soft"
+                  >
+                    {section.title}
+                  </Typography>
+
                   {section.type === "company" && (
                     <Grid container sx={{ p: 2 }} xs={12}>
                       <FormControl
@@ -227,7 +248,9 @@ export default function DraftPage() {
                           width: "100%",
                         }}
                       >
-                        <FormLabel>Cég kereső név alapján (még nem tölti ki⚠️)</FormLabel>
+                        <FormLabel>
+                          Cég kereső név alapján (még nem tölti ki⚠️)
+                        </FormLabel>
                         {
                           <Autocomplete
                             sx={{}}
@@ -283,7 +306,7 @@ export default function DraftPage() {
                     </Grid>
                   )}
 
-                  <Grid container sx={{}}>
+                  <Grid container sx={{}} spacing={2}>
                     {section.fields.map((field, index) => {
                       if (
                         field.visibleState &&
@@ -306,6 +329,8 @@ export default function DraftPage() {
                             <FormLabel
                               sx={{
                                 fontSize: 14,
+                                mb:0.5,
+                                mt:0.5,
                               }}
                             >
                               {field.title}
@@ -336,6 +361,9 @@ export default function DraftPage() {
                                       value={(option as RadioOption).value}
                                       name={field.id}
                                       id={field.id}
+                                      disabled={
+                                        (option as RadioOption).disabled
+                                      }
                                       label={(option as RadioOption).label}
                                       key={(option as RadioOption).value}
                                       sx={

@@ -1,18 +1,17 @@
 import * as React from "react";
 import { useState } from "react";
-import { useColorScheme } from "@mui/joy/styles";
+
 import * as ROUTES from "routes";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel, { formLabelClasses } from "@mui/joy/FormLabel";
-import IconButton, { IconButtonProps } from "@mui/joy/IconButton";
+
 import Link from "@mui/joy/Link";
 import Input from "@mui/joy/Input";
 import Typography from "@mui/joy/Typography";
-import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
-import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
+
 //import GoogleIcon from "icons/GoogleIcon";
 import { doSignInWithEmailAndPassword } from "_firebase/_auth";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
@@ -21,6 +20,7 @@ import {
   /*getAuth,*/ /* signInWithPopup,*/ GoogleAuthProvider,
 } from "firebase/auth";
 import { useAuth } from "hooks/useAuth";
+import ColorSchemeToggle from "components/ColorSchemeToogle";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -371,32 +371,3 @@ export function LoginPage() {
   );
 }
 
-function ColorSchemeToggle({ onClick, ...props }: IconButtonProps) {
-  const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) {
-    return <IconButton size="sm" variant="plain" color="neutral" disabled />;
-  }
-  return (
-    <IconButton
-      id="toggle-mode"
-      size="sm"
-      variant="plain"
-      color="neutral"
-      {...props}
-      onClick={(event) => {
-        if (mode === "light") {
-          setMode("dark");
-        } else {
-          setMode("light");
-        }
-        onClick?.(event);
-      }}
-    >
-      {mode === "light" ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
-    </IconButton>
-  );
-}

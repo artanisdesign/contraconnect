@@ -1,29 +1,17 @@
-import * as React from "react";
 import { useColorScheme } from "@mui/joy/styles";
+import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
+import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import IconButton, { IconButtonProps } from "@mui/joy/IconButton";
-import { Moon, Sun } from "react-feather";
+import React from "react";
 
-export default function ColorSchemeToggle({
-  onClick,
-  sx,
-  ...props
-}: IconButtonProps) {
+export default function ColorSchemeToggle({ onClick, ...props }: IconButtonProps) {
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => {
     setMounted(true);
   }, []);
   if (!mounted) {
-    return (
-      <IconButton
-        size="sm"
-        variant="plain"
-        color="neutral"
-        {...props}
-        sx={sx}
-        disabled
-      />
-    );
+    return <IconButton size="sm" variant="plain" color="neutral" disabled />;
   }
   return (
     <IconButton
@@ -40,20 +28,8 @@ export default function ColorSchemeToggle({
         }
         onClick?.(event);
       }}
-      sx={[
-        {
-          "& > *:first-of-type": {
-            display: mode === "dark" ? "none" : "initial",
-          },
-          "& > *:last-of-type": {
-            display: mode === "light" ? "none" : "initial",
-          },
-        },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
     >
-      <Moon  className="feather"/>
-      <Sun className="feather" />
+      {mode === "light" ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
     </IconButton>
   );
 }

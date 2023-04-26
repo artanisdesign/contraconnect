@@ -16,7 +16,7 @@ import { useAuth } from "hooks/useAuth";
 import { doSignOut } from "_firebase/_auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Divider, Modal, ModalDialog } from "@mui/joy";
-import { mainCategories } from "pages/Dashboard/DashboardPage";
+
 import { Link as RouterLink } from "react-router-dom";
 
 export default function SecondSidebar() {
@@ -83,29 +83,6 @@ export default function SecondSidebar() {
           <ListSubheader role="presentation" sx={{ color: "text.primary" }}>
             Ügycsoportok
           </ListSubheader>
-          {mainCategories.map((category, index) => (
-            <ListItem key={index + category.href}>
-              <ListItemButton
-                onClick={() => closeSidebar()}
-                component={RouterLink}
-                to={category.href}
-                selected={location.pathname === category.href}
-                variant={
-                  location.pathname === category.href ? "soft" : undefined
-                }
-              >
-                <ListItemDecorator>
-                  <Folder className="feather" />
-                </ListItemDecorator>
-                <ListItemContent>{category.title}</ListItemContent>
-                {category.popularItems?.length && (
-                  <Chip variant="soft" size="sm">
-                    {category.popularItems?.length}
-                  </Chip>
-                )}
-              </ListItemButton>
-            </ListItem>
-          ))}
 
           <ListItem>
             <ListItemButton disabled onClick={() => closeSidebar()}>

@@ -21,6 +21,7 @@ import Users from "pages/Dashboard/Users";
 import MyData from "pages/Dashboard/MyData";
 import CasesCategory from "pages/Dashboard/Cases/CasesCategory";
 import Draft from "pages/Dashboard/Draft";
+import Calendar from "pages/Dashboard/Calendar";
 
 const { unstable_sxConfig: muiSxConfig, ...muiTheme } = extendMuiTheme({
   // This is required to point to `var(--joy-*)` because we are using
@@ -155,11 +156,20 @@ export default function App() {
           <Route path={ROUTES.DASHBOARD_CASES}>
             <Route index element={<Cases />} />
             <Route
+              path={ROUTES.DASHBOARD_CASES + "/:draftID"}
+              element={<Draft />}
+            />
+             <Route
+              path={ROUTES.DASHBOARD_CASES + "/:draftID"}
+              element={<Draft />}
+            />
+            <Route
               path={ROUTES.DASHBOARD_CASES + "/:caseID"}
               element={<CasesCategory />}
             />
           </Route>
 
+          <Route path={ROUTES.DASHBOARD_CALENDAR} element={<Calendar />} />
           <Route path={ROUTES.DASHBOARD_ONGOING} element={<OngoingCases />} />
           <Route path={ROUTES.DASHBOARD_ARCHIVED} element={<ArchivedCases />} />
           <Route path={ROUTES.DASHBOARD_USERS} element={<Users />} />

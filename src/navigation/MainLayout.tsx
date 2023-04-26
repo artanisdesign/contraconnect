@@ -9,19 +9,20 @@ import {
 import React from "react";
 import ColorSchemeToggle from "components/ColorSchemeToogle";
 import { useAuth } from "hooks/useAuth";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 //import { Home, ChevronRight } from "react-feather";
 //import { Link as RouterLink } from "react-router-dom";
-//import * as ROUTES from "routes";
+import * as ROUTES from "routes";
 //import { mainCategories } from "pages/Dashboard/DashboardPage";
+//import FirstSidebar from "components/Sidebar/MainSideBar";
 import Layout from "components/Layout";
 import Navigation from "components/Navigation";
 
 import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import MenuIcon from "@mui/icons-material/Menu";
-
 export function MainLayout() {
   const { loading, user } = useAuth();
+  const navigate = useNavigate();
   //let location = useLocation();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
@@ -43,7 +44,11 @@ export function MainLayout() {
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
       {drawerOpen && (
-        <Layout.SideDrawer onClose={() => setDrawerOpen(false)}>
+        <Layout.SideDrawer
+          onClose={() => {
+            setDrawerOpen(false);
+          }}
+        >
           <Navigation />
         </Layout.SideDrawer>
       )}
@@ -67,7 +72,9 @@ export function MainLayout() {
             <IconButton
               variant="outlined"
               size="sm"
-              onClick={() => setDrawerOpen(true)}
+              onClick={() => {
+                setDrawerOpen(true);
+              }}
               sx={{ display: { sm: "none" } }}
             >
               <MenuIcon />
@@ -75,6 +82,9 @@ export function MainLayout() {
             <IconButton
               size="sm"
               variant="solid"
+              onClick={() => {
+                navigate(ROUTES.DASHBOARD);
+              }}
               sx={{ display: { xs: "none", sm: "inline-flex" } }}
             >
               <LinkRoundedIcon />
