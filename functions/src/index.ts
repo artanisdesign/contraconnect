@@ -13,7 +13,7 @@ import { docgen } from "./docgen/docgen";
 
 export const attemptToGenerateDoc = functions
   .region("europe-west3").runWith({
-    memory: "1GB",
+    //memory: "1GB",
     timeoutSeconds: 360,    
   })
   .firestore.document("attempts/{id}")

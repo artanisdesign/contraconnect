@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
-
 import * as admin from "firebase-admin";
+
 import Docxtemplater, { DXT } from "docxtemplater";
 import angularParser from "./expressions";
 import PizZip from "pizzip";
@@ -13,11 +13,8 @@ if (!admin.apps.length) {
   admin.initializeApp();
   admin.firestore().settings({ ignoreUndefinedProperties: true });
 }
-//fix this
-const fileBucket = "gs://doc-generator-dev.appspot.com";
-
 //const db = admin.firestore();
-const bucket = admin.storage().bucket(fileBucket);
+const bucket = admin.storage().bucket();
 
 export const docgen = async (
   snapshot: functions.firestore.QueryDocumentSnapshot
@@ -126,8 +123,8 @@ function nullGetter(part: DXT.Part) {
   if (!part.module) {
     // part.value contains the content of the tag, eg "name" in our example
     // By returning '{' and part.value and '}', it will actually do no replacement in reality. You could also return the empty string if you prefered.
-    //return "{" + part.value + "}";
-    return "-";
+    return "{" + part.value + "}";
+    //return "-";
   }
   if (part.module === "rawxml") {
     return "";

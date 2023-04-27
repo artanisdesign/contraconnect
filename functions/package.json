@@ -19,6 +19,7 @@
     "docxtemplater": "^3.37.2",
     "firebase-admin": "^11.7.0",
     "firebase-functions": "^4.3.1",
+    "n2words": "^1.13.0",
     "pizzip": "^3.1.4",
     "uuid": "^9.0.0"
   },

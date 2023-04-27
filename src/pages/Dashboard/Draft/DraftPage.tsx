@@ -13,11 +13,12 @@ import {
   Option,
   Sheet,
   Tooltip,
-  Autocomplete,
-  CircularProgress,
-  AutocompleteOption,
-  ListItemContent,
   Typography,
+  IconButton,
+  Modal,
+  ModalDialog,
+  ModalClose,
+  CircularProgress,
 } from "@mui/joy";
 
 import { getData } from "data";
@@ -27,40 +28,20 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { CaseTemplate, RadioOption, SelectOption } from "types";
 import { HelpCircle } from "react-feather";
-import { useGetCompanyList } from "api/companies";
-import useDebounce from "hooks/useDebounce";
+import { AutoFixNormalRounded } from "@mui/icons-material";
 
 export default function DraftPage() {
   let { draftID } = useParams();
-  let document: CaseTemplate | undefined;
-  if (draftID) {
-    document = getData(draftID);
-  }
+
   const [docId, setDocId] = React.useState<string>();
-  const [autoCompleteOpen, setAutoCompleteOpen] = React.useState(false);
+
+  const [document, setDocument] = React.useState<CaseTemplate>();
+  const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [tryPreLoad, setTryPreLoad] = React.useState(false);
   const [downloadURL, setDownloadURL] = React.useState<string>();
-  const [companyLookUpString, setCompanyLookUpString] =
-    React.useState<string>("");
+
   const [formState, setFormState] = React.useState<{ [key: string]: any }>({});
-
-  const searchText = useDebounce(companyLookUpString, 300);
-
-  const {
-    isLoading,
-    isError,
-    data: options,
-    error,
-    isFetching,
-  } = useGetCompanyList(searchText);
-
-  console.log("isLoading", isLoading, isError, options, error, isFetching);
-
-  React.useEffect(() => {
-    if (!autoCompleteOpen) {
-      //setOptions([]);
-    }
-  }, [autoCompleteOpen]);
 
   const handleRadioChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -84,7 +65,7 @@ export default function DraftPage() {
     }));
   };
   const handleSelectChange = (name: string, value: string) => {
-    console.log("handleSelectChange", name, value);
+    //console.log("handleSelectChange", name, value);
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
@@ -117,14 +98,57 @@ export default function DraftPage() {
     }
   }, [docId]);
 
+  React.useEffect(() => {
+    if (tryPreLoad && document) {
+      console.log("tryPreLoad", tryPreLoad);
+
+      var nd = document;
+
+      document.fieldSections.map((section, index) => {
+        section.fields.map((field, index) => {
+          if (
+            field.fieldType === "text" &&
+            field.preLoadValues &&
+            field.preLoadValues.length > 0
+          ) {
+            //get random value from the array
+            field.defaultValue =
+              field.preLoadValues[
+                Math.floor(Math.random() * field.preLoadValues.length)
+              ];
+          }
+          if (field.defaultValue) {
+            setFormState((prevState) => ({
+              ...prevState,
+              [field.id]: field.defaultValue,
+            }));
+          }
+          return field;
+        });
+        section.step = Date.now();
+        return section;
+      });
+      nd.updatedAt = Date.now();
+      setDocument(nd);
+
+      setTryPreLoad(false);
+    }
+  }, [tryPreLoad, document]);
+
+  let _document: CaseTemplate | undefined;
+  if (draftID && !document) {
+    _document = getData(draftID);
+    setDocument(_document);
+  }
+
   if (!document) return <>Hamarosan...</>;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <form
         onSubmit={async (event) => {
-          //setDownloadURL(undefined);
-          //setDocId(undefined);
+          setDownloadURL(undefined);
+          setDocId(undefined);
 
           event.preventDefault();
           //get the form data out of the event
@@ -147,25 +171,26 @@ export default function DraftPage() {
               }
             });
           });
-          //console.log(data);
           const formattedData: { [key: string]: any } = {};
+
           for (const [key, value] of Object.entries(data)) {
-            if (
-              value.toString().toLowerCase() === "true" ||
-              value.toString().toLowerCase() === "yes"
-            ) {
-              formattedData[key] = true;
-            } else if (
-              value.toString().toLowerCase() === "false" ||
-              value.toString().toLowerCase() === "no"
-            ) {
-              formattedData[key] = false;
-            } else if (value !== "" && value !== undefined) {
-              formattedData[key] = value;
+            if (value) {
+              if (
+                value.toString().toLowerCase() === "true" ||
+                value.toString().toLowerCase() === "yes"
+              ) {
+                formattedData[key] = true;
+              } else if (
+                value.toString().toLowerCase() === "false" ||
+                value.toString().toLowerCase() === "no"
+              ) {
+                formattedData[key] = false;
+              } else if (value !== "" && value !== undefined) {
+                formattedData[key] = value;
+              }
             }
           }
 
-          //console.log("formatted", formattedData);
           setDownloadURL(undefined);
           try {
             setLoading(true);
@@ -175,6 +200,7 @@ export default function DraftPage() {
             });
             console.log(id);
             setDocId(id);
+            setOpen(true);
           } catch (error) {
             console.log(error);
             setLoading(false);
@@ -183,7 +209,6 @@ export default function DraftPage() {
       >
         <Typography
           sx={{
-            //fontWeight: 600,
             mb: 2,
             mx: 1,
           }}
@@ -192,6 +217,17 @@ export default function DraftPage() {
           color="warning"
         >
           {document.title}
+          <IconButton
+            variant="plain"
+            sx={{
+              ml: 2,
+            }}
+            onClick={() => {
+              setTryPreLoad(true);
+            }}
+          >
+            <AutoFixNormalRounded />
+          </IconButton>
         </Typography>
         <Grid
           container
@@ -218,7 +254,7 @@ export default function DraftPage() {
                 xs={12}
                 sm={12}
                 md={section.fullWidth ? 12 : 6}
-                key={section.id}
+                key={section.id + section.step}
               >
                 <Card
                   sx={{
@@ -240,72 +276,6 @@ export default function DraftPage() {
                     {section.title}
                   </Typography>
 
-                  {section.type === "company" && (
-                    <Grid container sx={{ p: 2 }} xs={12}>
-                      <FormControl
-                        id="company-lookup"
-                        sx={{
-                          width: "100%",
-                        }}
-                      >
-                        <FormLabel>
-                          Cég kereső név alapján (még nem tölti ki⚠️)
-                        </FormLabel>
-                        {
-                          <Autocomplete
-                            sx={{}}
-                            size="sm"
-                            placeholder="Kezdje el gépelni a cég nevét..."
-                            open={autoCompleteOpen}
-                            onOpen={() => {
-                              setAutoCompleteOpen(true);
-                            }}
-                            onClose={() => {
-                              setAutoCompleteOpen(false);
-                            }}
-                            onInputChange={(_, newInputValue) => {
-                              setCompanyLookUpString(newInputValue);
-                            }}
-                            onChange={(_, newValue) => {
-                              console.log("newValue", newValue);
-                              if (newValue) {
-                                /* setFormState((prevState) => ({
-                                ...prevState,
-                                [section.id]: newValue,
-                              }));*/
-                              }
-                            }}
-                            isOptionEqualToValue={(option, value) =>
-                              option.RegNumber === value.RegNumber
-                            }
-                            renderOption={(props, option) => (
-                              <AutocompleteOption
-                                {...props}
-                                key={option.RegNumber + option.Name}
-                              >
-                                <ListItemContent sx={{ fontSize: "sm" }}>
-                                  {option.Name}
-                                </ListItemContent>
-                              </AutocompleteOption>
-                            )}
-                            getOptionLabel={(option) => option.Name}
-                            options={options ?? []}
-                            loading={isLoading}
-                            loadingText={"..."}
-                            endDecorator={
-                              isFetching ? (
-                                <CircularProgress
-                                  size="sm"
-                                  sx={{ bgcolor: "background.surface" }}
-                                />
-                              ) : null
-                            }
-                          />
-                        }
-                      </FormControl>
-                    </Grid>
-                  )}
-
                   <Grid container sx={{}} spacing={2}>
                     {section.fields.map((field, index) => {
                       if (
@@ -323,14 +293,15 @@ export default function DraftPage() {
                         <Grid
                           xs={12}
                           sm={field.fullWidth ? 12 : 6}
-                          key={"d" + index + field.id}
+                          key={"d" + index}
                         >
                           <FormControl key={field.id}>
                             <FormLabel
                               sx={{
                                 fontSize: 14,
-                                mb:0.5,
-                                mt:0.5,
+                                mb: 0.5,
+                                mt: 0.5,
+                                opacity: field.disabled ? 0.4 : 1,
                               }}
                             >
                               {field.title}
@@ -356,7 +327,7 @@ export default function DraftPage() {
                                 id={field.id}
                               >
                                 {field.options &&
-                                  field.options.map((option) => (
+                                  field.options.map((option, index) => (
                                     <Radio
                                       value={(option as RadioOption).value}
                                       name={field.id}
@@ -365,7 +336,9 @@ export default function DraftPage() {
                                         (option as RadioOption).disabled
                                       }
                                       label={(option as RadioOption).label}
-                                      key={(option as RadioOption).value}
+                                      key={
+                                        (option as RadioOption).value + index
+                                      }
                                       sx={
                                         {
                                           //width: "100%",
@@ -385,6 +358,7 @@ export default function DraftPage() {
                                 variant="outlined"
                                 color="neutral"
                                 name={field.id}
+                                disabled={field.disabled}
                                 defaultValue={field.defaultValue || ""}
                                 type={field.fieldType}
                                 id={field.id}
@@ -401,8 +375,11 @@ export default function DraftPage() {
                           {field.fieldType === "select" && field.options && (
                             <Select
                               variant="outlined"
+                              color="neutral"
+                              disabled={field.disabled}
                               key={"select_" + field.id}
                               size="sm"
+                              defaultValue={field.defaultValue || ""}
                               onChange={(_e: any, newValue) => {
                                 handleSelectChange(
                                   field.id,
@@ -415,16 +392,16 @@ export default function DraftPage() {
                             >
                               {field.options.map((option, index) => (
                                 <Option
+                                  color="neutral"
                                   variant={
                                     (option as SelectOption).disabled
-                                      ? "solid"
+                                      ? "plain"
                                       : undefined
                                   }
                                   disabled={(option as SelectOption).disabled}
                                   value={(option as SelectOption).value}
+                                  key={(option as SelectOption).value + index}
                                 >
-                                  {(option as SelectOption).value}
-                                  {" - "}
                                   {(option as RadioOption).label}
                                 </Option>
                               ))}
@@ -442,13 +419,14 @@ export default function DraftPage() {
                                   my: 1,
                                   borderRadius: 6,
                                 }}
-                                key={(option as RadioOption).value}
+                                key={(option as RadioOption).value + index}
                               >
                                 <FormControl key={"xd" + field.id}>
                                   <Checkbox
                                     overlay
                                     label={(option as RadioOption).label}
                                     key={(option as RadioOption).value}
+                                    disabled={(option as RadioOption).disabled}
                                     name={(option as RadioOption).value}
                                     checked={
                                       formState[
@@ -480,30 +458,57 @@ export default function DraftPage() {
           sx={{
             m: 2,
           }}
+          size="lg"
           type="submit"
           loading={loading}
         >
           Kész
         </Button>
-        <Button
-          sx={{
-            m: 2,
-          }}
-          disabled={!downloadURL}
-        >
-          <a
-            href={downloadURL}
-            target="_blank"
-            download
-            rel="noreferrer"
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-            }}
+
+        <Modal open={open} onClose={() => setOpen(false)}>
+          <ModalDialog
+            color="neutral"
+            layout="center"
+            size="md"
+            variant="outlined"
           >
-            Fájl letöltése
-          </a>
-        </Button>
+            <ModalClose />
+            <Typography>
+              {loading ? "Fájlok készítése.." : "Elkészült fájlok letöltése"}
+            </Typography>
+            <Box
+              sx={{
+                flexDirection: "column",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              {loading && <CircularProgress sx={{ m: 2, mt: 3 }} />}
+              <Button
+                sx={{
+                  mt: 2,
+                }}
+                fullWidth
+                disabled={!downloadURL}
+              >
+                <a
+                  href={downloadURL}
+                  target="_blank"
+                  download
+                  rel="noreferrer"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  Fájlok letöltése
+                </a>
+              </Button>
+            </Box>
+          </ModalDialog>
+        </Modal>
       </form>
     </Box>
   );

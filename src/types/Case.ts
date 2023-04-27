@@ -20,6 +20,7 @@ export interface FieldSection {
   fullWidth?: boolean;
   visibleState?: string[];
   visibleCondition?: string;
+  step?: number;
 }
 
 export interface Field {
@@ -47,6 +48,8 @@ export interface Field {
   visibleState?: string[];
   visibleCondition?: string;
   resetOnChange?: boolean;
+  disabled?: boolean;
+  preLoadValues?: string[];
 }
 
 export interface RadioOption {
